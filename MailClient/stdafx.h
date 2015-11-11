@@ -13,6 +13,7 @@
 #include <windows.h>
 
 // C RunTime Header Files
+#include <Commctrl.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -26,3 +27,4 @@
 
 // Link curl Lib file
 #pragma comment(lib, "curl\\lib\\libcurl.lib")
+#pragma comment(lib, "Comctl32.lib")

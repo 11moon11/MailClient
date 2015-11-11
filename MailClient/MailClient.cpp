@@ -12,6 +12,7 @@ char szTitle[MAX_LOADSTRING];                  // The title bar text
 char szWindowClass[MAX_LOADSTRING];            // the main window class name
 const int wndWidth = 640;
 const int wndHight = 480;
+HWND hwListBox;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -90,6 +91,50 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassEx(&wcex);
 }
 
+// InitListViewColumns: Adds columns to a list-view control.
+// hWndListView:        Handle to the list-view control. 
+// Returns TRUE if successful, and FALSE otherwise. 
+#define IDS_FIRSTCOLUMN 0
+BOOL InitListViewColumns(HWND hWndListView)
+{
+	std::string sText = "123";     // Temporary buffer.
+	LVCOLUMN lvc;
+	int iItem;
+	int iCol;
+
+	// Initialize the LVCOLUMN structure.
+	// The mask specifies that the format, width, text,
+	// and subitem members of the structure are valid.
+	lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+
+	// Add the columns.
+	for (iCol = 0; iCol < 3; iCol++)
+	{
+		iItem = SendMessage(hWndListView, LVM_GETITEMCOUNT, 0, 0);
+
+		lvc.iSubItem = iCol;
+		
+		lvc.pszText = (LPSTR)sText.c_str();
+		// Width of column in pixels.
+		if (iCol == 0)
+			lvc.cx = 30;
+		else if(iCol == 1 || iCol == 2)
+			lvc.cx = 100;
+
+		if (iCol < 2)
+			lvc.fmt = LVCFMT_LEFT;  // Left-aligned column.
+		else
+			lvc.fmt = LVCFMT_RIGHT; // Right-aligned column.
+
+		//SendMessage(hWndListView, LVM_INSERTITEM, 0, (LPARAM)&lvc);
+		// Insert the columns into the list view.
+		if (ListView_InsertColumn(hWndListView, iCol, &lvc) == -1)
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
 //
 //   FUNCTION: InitInstance(HINSTANCE, int)
 //
@@ -117,6 +162,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 	   horizontal, vertical, wndWidth, wndHight, nullptr, nullptr, hInstance, nullptr);
+	   //CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_MAINDIALOG), 0, About, 0);
+
+   hwListBox = CreateWindowEx(0, WC_LISTVIEW, NULL, WS_BORDER | WS_VISIBLE | WS_CHILD | LVS_REPORT | LVS_EDITLABELS,
+	   0, 0, //from left, from top
+	   wndWidth-17, wndHight-47, //length, width
+	   hWnd, (HMENU)3, hInst, NULL);
+   InitListViewColumns(hwListBox);
 
    if (!hWnd)
    {
@@ -227,33 +279,29 @@ INT_PTR CALLBACK Connect(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			return (INT_PTR)TRUE;
 		}
 		else if (LOWORD(wParam) == IDOK)
-		{			
-			CURL *curl;
-			CURLcode res = CURLE_OK;
-
-			struct MessageFile msgfile = {
-				"imap-Message.txt", // name to store the file as if successful
-				NULL
-			};
-
-			curl_global_init(CURL_GLOBAL_DEFAULT);
-			curl = curl_easy_init();
-
-			if (curl) 
-			{
-				SetWindowText(GetDlgItem(hDlg, IDC_EDIT3), "email@mail.ru");
-				SetWindowText(GetDlgItem(hDlg, IDC_EDIT4), "password");
+		{		
+				// For test purpose
+				//SetWindowText(GetDlgItem(hDlg, IDC_EDIT2), "imap.mail.ru");
+				//SetWindowText(GetDlgItem(hDlg, IDC_EDIT3), "***********@mail.ru");
+				//SetWindowText(GetDlgItem(hDlg, IDC_EDIT4), "***********");
 
 				// Get username and password
+				GetWindowText(GetDlgItem(hDlg, IDC_EDIT2), imapserv, MAX_LOADSTRING);
 				GetWindowText(GetDlgItem(hDlg, IDC_EDIT3), username, MAX_LOADSTRING);
 				GetWindowText(GetDlgItem(hDlg, IDC_EDIT4), password, MAX_LOADSTRING);
-				GetWindowText(GetDlgItem(hDlg, IDC_EDIT4), imapserv, MAX_LOADSTRING);
-				std::string server = imapserv;
-				server = "imaps://" + server;
 
-				// Set username and password
-				curl_easy_setopt(curl, CURLOPT_USERNAME, username);
-				curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
+				IMAP imap(username, password, imapserv);
+				if (imap.login())
+				{
+					imap.fetchEmail(780);
+					imap.fetchEmail(781);
+				}
+				else
+				{
+					MessageBox(NULL, "Can not connect to email!", "Error", MB_OK | MB_ICONERROR);
+				}
+				
+				/*
 
 				// Using SSL to connect to IMAP
 				server = server + "/INBOX";
@@ -290,6 +338,7 @@ INT_PTR CALLBACK Connect(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			curl_global_cleanup();
+			*/
 		}
 		break;
 	}

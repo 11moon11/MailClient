@@ -1,0 +1,36 @@
+﻿Build started 13.11.2015 19:12:21.
+     1>Project "C:\Users\Кирилл\Documents\GitHub\MailClient\MailClient\MailClient.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"stdafx.h" /Fp"x64\Release\MailClient.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"x64\Release\MailClient.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt IMAP.cpp MailClient.cpp
+         IMAP.cpp
+         MailClient.cpp
+     1>MailClient.cpp(39): error C2664: 'int LoadStringW(HINSTANCE,UINT,LPWSTR,int)': cannot convert argument 3 from 'char [100]' to 'LPWSTR'
+         MailClient.cpp(39): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(40): error C2664: 'int LoadStringW(HINSTANCE,UINT,LPWSTR,int)': cannot convert argument 3 from 'char [100]' to 'LPWSTR'
+         MailClient.cpp(40): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(88): error C2440: '=': cannot convert from 'char [100]' to 'LPCWSTR'
+         MailClient.cpp(88): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(113): warning C4244: '=': conversion from 'LRESULT' to 'int', possible loss of data
+     1>MailClient.cpp(117): error C2440: '=': cannot convert from 'LPSTR' to 'LPWSTR'
+         MailClient.cpp(117): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(164): error C2664: 'HWND CreateWindowExW(DWORD,LPCWSTR,LPCWSTR,DWORD,int,int,int,int,HWND,HMENU,HINSTANCE,LPVOID)': cannot convert argument 2 from 'char [100]' to 'LPCWSTR'
+         MailClient.cpp(164): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(271): error C2664: 'BOOL SetWindowTextW(HWND,LPCWSTR)': cannot convert argument 2 from 'const char [16]' to 'LPCWSTR'
+         MailClient.cpp(271): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(272): error C2664: 'BOOL SetWindowTextW(HWND,LPCWSTR)': cannot convert argument 2 from 'const char [17]' to 'LPCWSTR'
+         MailClient.cpp(272): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(289): error C2664: 'int GetWindowTextW(HWND,LPWSTR,int)': cannot convert argument 2 from 'char [100]' to 'LPWSTR'
+         MailClient.cpp(289): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(290): error C2664: 'int GetWindowTextW(HWND,LPWSTR,int)': cannot convert argument 2 from 'char [100]' to 'LPWSTR'
+         MailClient.cpp(290): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(291): error C2664: 'int GetWindowTextW(HWND,LPWSTR,int)': cannot convert argument 2 from 'char [100]' to 'LPWSTR'
+         MailClient.cpp(291): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>MailClient.cpp(301): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': cannot convert argument 2 from 'const char [26]' to 'LPCWSTR'
+         MailClient.cpp(301): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+     1>Done Building Project "C:\Users\Кирилл\Documents\GitHub\MailClient\MailClient\MailClient.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.57

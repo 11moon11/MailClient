@@ -7,8 +7,13 @@
 
 #include "targetver.h"
 
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
+
+// Global definitions
+#define IDS_FIRSTCOLUMN 0
+
 // Windows Header Files:
 #include <windows.h>
 

@@ -20,6 +20,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Connect(HWND, UINT, WPARAM, LPARAM);
+BOOL				InitListViewColumns(HWND, std::string, int, int, int);
 static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -91,48 +92,35 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassEx(&wcex);
 }
 
-// InitListViewColumns: Adds columns to a list-view control.
-// hWndListView:        Handle to the list-view control. 
+//
+// FUNCTION: InitListViewColumns()
+//
+// PURPOSE: Adds columns to a list-view control.
+//
+// hWndListView			- Handle to the list-view control.
+// caption				- Column caption.
+// col					- Column number (starting from '0').
+// width				- Column width in pixels.
+// allign				- Column text alignment (LVCFMT_LEFT, LVCFMT_RIGHT, LVCFMT_CENTER).
+//
 // Returns TRUE if successful, and FALSE otherwise. 
-#define IDS_FIRSTCOLUMN 0
-BOOL InitListViewColumns(HWND hWndListView)
+BOOL InitListViewColumns(HWND hWndListView, std::string caption, int col, int width, int allign = LVCFMT_CENTER)
 {
-	std::string sText = "123";     // Temporary buffer.
 	LVCOLUMN lvc;
-	int iItem;
-	int iCol;
+	int totalItems = SendMessage(hWndListView, LVM_GETITEMCOUNT, 0, 0);
 
-	// Initialize the LVCOLUMN structure.
-	// The mask specifies that the format, width, text,
-	// and subitem members of the structure are valid.
+	// Setting up parameters for the column
 	lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+	lvc.pszText = (LPSTR)caption.c_str();
+	lvc.iSubItem = col;
+	lvc.fmt = allign;
+	lvc.cx = width;
 
-	// Add the columns.
-	for (iCol = 0; iCol < 3; iCol++)
-	{
-		iItem = SendMessage(hWndListView, LVM_GETITEMCOUNT, 0, 0);
+	// Attempt to add column
+	if (ListView_InsertColumn(hWndListView, col, &lvc) == -1)
+		return false;
 
-		lvc.iSubItem = iCol;
-		
-		lvc.pszText = (LPSTR)sText.c_str();
-		// Width of column in pixels.
-		if (iCol == 0)
-			lvc.cx = 30;
-		else if(iCol == 1 || iCol == 2)
-			lvc.cx = 100;
-
-		if (iCol < 2)
-			lvc.fmt = LVCFMT_LEFT;  // Left-aligned column.
-		else
-			lvc.fmt = LVCFMT_RIGHT; // Right-aligned column.
-
-		//SendMessage(hWndListView, LVM_INSERTITEM, 0, (LPARAM)&lvc);
-		// Insert the columns into the list view.
-		if (ListView_InsertColumn(hWndListView, iCol, &lvc) == -1)
-			return FALSE;
-	}
-
-	return TRUE;
+	return true;
 }
 
 //
@@ -168,11 +156,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	   0, 0, //from left, from top
 	   wndWidth-17, wndHight-47, //length, width
 	   hWnd, (HMENU)3, hInst, NULL);
-   InitListViewColumns(hwListBox);
 
-   if (!hWnd)
+   // Check if window is created and columns are added
+   if (!InitListViewColumns(hwListBox, "ID", 0, 30) ||
+	   !InitListViewColumns(hwListBox, "From", 1, 150) ||
+	   !InitListViewColumns(hwListBox, "Subject", 2, 365) ||
+	   !InitListViewColumns(hwListBox, "Date", 3, 80) ||
+	   !hwListBox ||
+	   !hWnd)
    {
-      return FALSE;
+	   return FALSE;
    }
 
    ShowWindow(hWnd, nCmdShow);
